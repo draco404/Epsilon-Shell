@@ -2,9 +2,8 @@ use std::{io::{stdin, stdout, Write}, process::Command, path::Path, env};
 
 fn main() {
     loop {
-        print!(">");
-        stdout().flush().unwrap();
-    
+        print_current();
+
         let mut input = String::new();
         stdin()
             .read_line(&mut input)
@@ -22,14 +21,25 @@ fn main() {
                     eprintln!("{}", e);
                 }
             },
+            "exit" => return,
             command => {
-                let mut child = Command::new(command)
+                let child = Command::new(command)
                     .args(args)
-                    .spawn()
-                    .unwrap();
-                child.wait().unwrap();
+                    .spawn();
+                
+                match child {
+                    Ok(mut child) => { child.wait().unwrap(); },
+                    Err(e) => eprintln!("{}", e),
+                }
             }
         }
     }
 }
 
+fn print_current() {
+    let current_path = env::current_dir()
+                                .unwrap();
+    let current_path = current_path.to_str().unwrap();
+    print!("{}>", current_path);
+    stdout().flush().unwrap();
+}
