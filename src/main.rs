@@ -10,9 +10,15 @@ fn main() {
             .read_line(&mut input)
             .expect("Error on Input");
 
-        let command = input.trim();
+        let mut parts = input.trim().split_whitespace();
+        let command = parts.next().unwrap();
+        let args = parts;
 
-        let mut child = Command::new(command).spawn().unwrap();
+
+        let mut child = Command::new(command)
+            .args(args)
+            .spawn()
+            .unwrap();
         child.wait().unwrap();
     }
 }
