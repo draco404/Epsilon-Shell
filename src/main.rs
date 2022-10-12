@@ -10,7 +10,12 @@ fn main() {
             .expect("Error on Input");
 
         let mut parts = input.trim().split_whitespace();
-        let command = parts.next().unwrap();
+        // if parts.count()
+        let command;
+        if let Some(_command) = parts.next() {
+            command = _command;
+        } else { continue; }
+
         let args = parts;
 
         match command {
@@ -29,7 +34,10 @@ fn main() {
                 
                 match child {
                     Ok(mut child) => { child.wait().unwrap(); },
-                    Err(e) => eprintln!("{}", e),
+                    Err(_) => {
+                        // eprintln!("epsilon: command not found: {} {:?}", command, args);
+                        eprintln!("epsilon: command not found: {}", input);
+                    },
                 }
             }
         }
